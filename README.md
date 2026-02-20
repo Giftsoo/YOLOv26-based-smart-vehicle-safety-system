@@ -1,7 +1,3 @@
-Your README should include:
-
-🔹 Project Title
-
 Intelligent Vehicle Safety System using YOLOv26
 
 🔹 Description
