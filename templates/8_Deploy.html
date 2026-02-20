@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rear Vehicle Detection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #e6f2f2;
+    }
+
+    .page {
+      text-align: center;
+      padding-top: 40px;
+    }
+
+    .camera-btn {
+      background: black;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      font-size: 15px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .stop-btn {
+      background: darkred;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      font-size: 15px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .page-title {
+      margin-top: 20px;
+      font-size: 28px;
+      color: #1b5e50;
+      font-weight: bold;
+    }
+
+    #rearBox {
+      display: none;
+      width: 720px;
+      margin: 30px auto;
+      border: 3px solid red;
+      background: black;
+    }
+
+    .camera-header {
+      color: white;
+      padding: 10px;
+      font-size: 18px;
+      background: black;
+    }
+
+    #rearStream {
+      display: block;
+      width: 100%;
+      height: 480px;
+      background: black;
+    }
+
+    @media (max-width: 768px) {
+      #rearBox {
+        width: 95%;
+      }
+      .page-title {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <!-- BUTTONS -->
+  <button class="camera-btn" onclick="startRearCamera()">
+    START CAMERA
+  </button>
+
+  <button class="stop-btn" onclick="stopRearCamera()">
+    STOP CAMERA
+  </button>
+
+  <!-- TITLE -->
+  <div class="page-title">
+    Rear Vehicle Detection – Click Camera
+  </div>
+
+  <!-- CAMERA BOX -->
+  <div id="rearBox">
+    <div class="camera-header">
+      Live Rear Vehicle Detection
+    </div>
+    <img id="rearStream">
+  </div>
+
+</div>
+
+<script>
+  let lastRearState = false;
+  let audioUnlocked = false;
+  let polling = null;
+
+  function speak(text) {
+    if (!text) return;
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.rate = 1;
+    msg.pitch = 1;
+    window.speechSynthesis.speak(msg);
+  }
+
+  function startRearCamera() {
+    const img = document.getElementById("rearStream");
+    const box = document.getElementById("rearBox");
+
+    img.src = "{% url 'rear_video_feed' %}";
+    box.style.display = "block";
+
+    // unlock browser TTS
+    if (!audioUnlocked) {
+      speak(" ");
+      audioUnlocked = true;
+    }
+
+    // start polling alert status
+    if (!polling) {
+      polling = setInterval(checkRearAlert, 1000);
+    }
+  }
+
+  function stopRearCamera() {
+    fetch("{% url 'stop_camera' %}");
+
+    document.getElementById("rearStream").src = "";
+    document.getElementById("rearBox").style.display = "none";
+
+    window.speechSynthesis.cancel();
+    lastRearState = false;
+
+    if (polling) {
+      clearInterval(polling);
+      polling = null;
+    }
+  }
+
+  function checkRearAlert() {
+    fetch("{% url 'alert_status' %}")
+      .then(res => res.json())
+      .then(data => {
+        if (data.rear && !lastRearState) {
+          speak("Warning. Rear vehicle detected");
+        }
+        lastRearState = data.rear;
+      })
+      .catch(() => {});
+  }
+</script>
+
+</body>
+</html>

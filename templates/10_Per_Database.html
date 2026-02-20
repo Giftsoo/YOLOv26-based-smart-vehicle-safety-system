@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detected </title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #2e9673, #150000);
+            color: #fff;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #004d40;
+        }
+        td {
+            background-color: #555;
+        }
+        tr:hover {
+            background-color: #cccccc;
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pathole Detection Database</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Frame Number</th>
+                    <th>Class Name</th>
+                    <th>Confidence</th>
+                    <th>Coordinates</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for model in models %}
+                <tr>
+                    <td>{{ model.frame_number }}</td>
+                    <td>{{ model.class_name }}</td>
+                    <td>{{ model.confidence }}</td>
+                    <td>{{ model.coordinates }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No detected yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

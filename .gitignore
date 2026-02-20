@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+media/
+profile_images/
+
+# macOS
+.DS_Store
+
+# Virtual env
+env/
+venv/
+
+# Model weights
+*.pt
+*.zip
+

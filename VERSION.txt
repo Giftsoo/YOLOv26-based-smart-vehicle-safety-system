@@ -1,0 +1,10 @@
+PROJECT: Intelligent Driver Alert System
+VERSION: LEVEL-2 FINAL STABLE
+DATE: 2026-02-19
+FEATURES:
+- Rear vehicle detection (YOLO + distance-based alert)
+- Pothole detection (YOLO + region-based alert)
+- Browser voice alerts (SpeechSynthesis)
+- Start / Stop camera control
+- macOS compatible (AVFoundation)
+STATUS: CONFERENCE READY

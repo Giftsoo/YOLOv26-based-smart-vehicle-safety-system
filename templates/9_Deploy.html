@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pothole Detection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .jumbotron {
+      min-height: 100vh;
+      background-image: url("https://images.unsplash.com/photo-1515162816999-a0c47dc192f7");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .main {
+      text-align: center;
+      padding-top: 120px;
+      background-color: rgba(224, 242, 241, 0.9);
+      min-height: 100vh;
+    }
+
+    .btn {
+      background-color: black;
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .stop-btn {
+      background-color: darkred;
+    }
+
+    h1 {
+      color: #004d40;
+      font-size: 28px;
+    }
+
+    #potholeBox {
+      display: none;
+      margin: 30px auto;
+      width: 660px;
+      background: black;
+      padding: 10px;
+      border: 3px solid red;
+    }
+
+    #potholeBox h3 {
+      color: white;
+      text-align: center;
+      margin: 5px;
+    }
+
+    #potholeStream {
+      display: block;
+      width: 100%;
+      height: 480px;
+      background: black;
+    }
+
+    @media (max-width: 768px) {
+      #potholeBox {
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="jumbotron">
+  <div class="main">
+
+    <!-- BUTTONS -->
+    <button class="btn" onclick="startPotholeCamera()">
+      START CAMERA
+    </button>
+
+    <button class="btn stop-btn" onclick="stopPotholeCamera()">
+      STOP CAMERA
+    </button>
+
+    <h1>Pothole Detection – Click Camera</h1>
+
+    <!-- CAMERA BOX -->
+    <div id="potholeBox">
+      <h3>Live Pothole Detection</h3>
+      <img id="potholeStream">
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let lastPotholeState = false;
+  let audioUnlocked = false;
+  let polling = null;
+
+  function speak(text) {
+    if (!text) return;
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.rate = 1;
+    msg.pitch = 1;
+    window.speechSynthesis.speak(msg);
+  }
+
+  function startPotholeCamera() {
+    const img = document.getElementById("potholeStream");
+    const box = document.getElementById("potholeBox");
+
+    img.src = "{% url 'pothole_video_feed' %}";
+    box.style.display = "block";
+
+    // unlock browser TTS (required)
+    if (!audioUnlocked) {
+      speak(" ");
+      audioUnlocked = true;
+    }
+
+    // start alert polling
+    if (!polling) {
+      polling = setInterval(checkPotholeAlert, 1000);
+    }
+  }
+
+  function stopPotholeCamera() {
+    fetch("{% url 'stop_camera' %}");
+
+    document.getElementById("potholeStream").src = "";
+    document.getElementById("potholeBox").style.display = "none";
+
+    window.speechSynthesis.cancel();
+    lastPotholeState = false;
+
+    if (polling) {
+      clearInterval(polling);
+      polling = null;
+    }
+  }
+
+  function checkPotholeAlert() {
+    fetch("{% url 'alert_status' %}")
+      .then(res => res.json())
+      .then(data => {
+        if (data.pothole && !lastPotholeState) {
+          speak("Warning. Pothole ahead");
+        }
+        lastPotholeState = data.pothole;
+      })
+      .catch(() => {});
+  }
+</script>
+
+</body>
+</html>

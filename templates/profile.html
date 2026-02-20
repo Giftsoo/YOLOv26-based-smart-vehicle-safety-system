@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Profile Page{% endblock title %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="css.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+</head>
+<style>
+/* 🌈 Page Background */
+.profile-wrapper {
+    background: linear-gradient(135deg, #dbeafe 0%, #f3e8ff 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* 🧾 Profile Card */
+.profile-card {
+    background: #ffffff;
+    max-width: 700px;
+    width: 100%;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* 🖼 Avatar Styling */
+.avatar-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid #2563eb;
+    object-fit: cover;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+.profile-avatar:hover {
+    transform: scale(1.05);
+}
+
+/* ✨ Typography */
+.username {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2563eb;
+    margin: 0.5rem 0;
+}
+.subtitle {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+/* 🎨 Gradient Button */
+.btn-gradient {
+    background: linear-gradient(90deg, #2563eb, #9333ea);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease-in-out;
+}
+.btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+                
+</style>
+<body>
+ 
+    
+    <div class="profile-wrapper">
+        <div class="profile-card shadow">
+            <!-- Profile Picture + Username -->
+            <div class="profile-header text-center">
+                <div class="avatar-container">
+                    <img src="{{ user.profile.avatar.url }}" alt="Profile Picture" class="profile-avatar">
+                </div>
+                <h2 class="username">{{ user.username }}</h2>
+                <p class="subtitle">Update your personal details and keep your profile fresh ✨</p>
+            </div>
+    
+            <!-- Form Error Handling -->
+            {% if user_form.errors %}
+            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <div id="form_errors">
+                    {% for key, value in user_form.errors.items %}
+                    <strong>{{ value }}</strong><br>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+    
+            <!-- Profile Form -->
+            <form method="post" enctype="multipart/form-data" class="profile-form mt-4">
+                {% csrf_token %}
+    
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">👤 Username</label>
+                    {{ user_form.username }}
+                </div>
+    
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">📧 Email</label>
+                    {{ user_form.email }}
+                </div>
+    
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">🖼 Change Avatar</label>
+                    {{ profile_form.avatar }}
+                </div>
+    
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">📝 Bio</label>
+                    {{ profile_form.bio }}
+                </div>
+    
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-gradient btn-lg px-4">💾 Save</button>
+                    <button type="reset" class="btn btn-outline-secondary btn-lg px-4">↺ Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    {% endblock content %}
+    
+  
+</body>
+</html>

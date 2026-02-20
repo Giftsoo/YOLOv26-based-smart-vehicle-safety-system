@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+                body {
+                margin: 0;
+                padding: 0;
+                background-image: url('/static/images/A43.jpg');
+                background-color: #eee
+                }
+
+                #container {
+                width: 100%;
+                background: rgba(0,0,0,0.2);
+                padding: 20px 0px 50px;
+                }
+
+                form {
+                width: 60vw;
+                margin: auto;
+                font-family: Arial;
+                background: rgba(0,0,0,0.8);
+                padding: 15px;
+                color: white;
+                border-radius: 15px;
+                }
+
+                fieldset {
+                margin: 10px;
+                border: none;
+                }
+
+                h1, p {
+                text-align: center
+                }
+
+                #name, #email, #number {
+                display: block;
+                width: 97%;
+                height: 40px;
+                margin: 5px 0;
+                padding: 3px;
+
+                }
+
+                label {
+                display: block;
+                margin: 30px 0;
+                }
+
+                .inline {
+                width: unset;
+                margin: 0 0.5em 0 0;
+                vertical-align: middle;
+                }
+
+                #dropdown {
+                display: block;
+                width: 100%
+                }
+
+                #submit{
+                margin: 20px auto;
+                display: block;
+                width: 60%;
+                height: 3em;
+                background: green;
+                border-radius: 10px;
+                }
+
+                textarea {
+                width: 100%;
+                margin: 10px auto;
+                border-radius: 5px;
+
+                }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1 style="font-size: 60px; color: white;" id="title">PERSONAL REGISTERATION FORM</h1>
+        <center>
+            <h3 style="font-size: 40px;color: white;" id="description">Personal information, often abbreviated as "PI" or "PII" (Personally Identifiable Information), refers to data or details that can be used to identify, contact, or locate a specific individual. This information can be sensitive and is often subject to privacy laws and regulations to protect individuals' privacy and security. Personal information.</h3>
+        </center>
+        <form method="post">
+            {% csrf_token %}
+                <fieldset>
+
+                    <label>FIRST_NAME</label>
+                    <input id="email" name="firstname" type="text" required placeholder="FIRST_NAME" /><br>
+
+                    <label>LAST_NAME</label>
+                    <input id="email" name="lastname" type="text" required placeholder="LAST_NAME" /><br>
+
+                    <label>AGE</label><br>
+                    <input id="email" name="age" type="number" required placeholder="AGE" /><br>
+
+                    <label>ADDRESS</label>
+                    <input id="email" name="address" type="text" required placeholder="ADDRESS" /><br>
+
+                    <label>PHONE</label>
+                    <input id="email" name="phone" type="number" required placeholder="PHONE" /><br>
+
+                    <label>CITY</label>
+                    <input id="email" name="city" type="text" required placeholder="CITY" /><br>
+
+                    <label>STATE</label>
+                    <input id="email" name="state" type="text" required placeholder="STATE" /><br>
+
+                    <label>NATIONALITY</label>
+                    <input id="email" name="country" type="text" required placeholder="NATIONALITY" /><br>
+                    
+                </fieldset>
+
+                <fieldset>
+                    <input id="submit" type="submit" />
+                </fieldset>
+        </form>
+      </div>
+      <script>
+            const form = document.getElementById("survey-form");
+
+            form.addEventListener("submit", handle_submit);
+
+            function handle_submit(event)
+            {
+            event.preventDefault();
+            alert("Thank you!");
+            }
+    </script>
+    
+</body>
+</html>
